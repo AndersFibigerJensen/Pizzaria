@@ -29,7 +29,6 @@ namespace ConsoleApp3
             _pizza = pizza;
             _ordreidcounter++;
             _ordreid= _ordreidcounter;
-            _pizzakøbsliste = new List<Pizza>();
             
         }
 

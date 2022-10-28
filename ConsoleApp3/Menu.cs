@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Pizzaria
 {
-    public class Store
+    public class Menu
     {
 
 
@@ -16,14 +17,14 @@ namespace Pizzaria
         private CustomerCatalog _customerCatalog;
 
 
-        public Store(Pizzacatalog pizzacatalog, CustomerCatalog customerCatalog)
+        public Menu(Pizzacatalog pizzacatalog, CustomerCatalog customerCatalog)
         {
             _pizzacatalog = pizzacatalog;
             _customerCatalog = customerCatalog;
 
         }
 
-        public int runmenu()
+        public int menuchoice()
         {
             string choice = Console.ReadLine();
             int input = -1;
@@ -37,7 +38,7 @@ namespace Pizzaria
             }
         }
 
-        public int ShowMenu()
+        public int showMenu()
         {
             Console.Clear();
             Console.WriteLine("\t---------------Pizzaria--------------------");
@@ -46,25 +47,27 @@ namespace Pizzaria
             Console.WriteLine("        tast 3 for at søge efter en kunde");
             Console.WriteLine("        tast 4 for at lave en liste over alle kunder");
             Console.WriteLine("        tast 5 for at fjerne en kunde");
-            Console.WriteLine("        tast 6 for at tilføje en pizza til din ordre");
-            Console.WriteLine("        tast 7 for at søge efter en pizza ");
-            Console.WriteLine("        tast 8 for at fjerne en pizza fra menuen");
+            Console.WriteLine("        tast 6 for at tilføje en pizza");
+            Console.WriteLine("        tast 7 for at lave en liste over alle pizzaer");
+            Console.WriteLine("        tast 8 for at søge efter en pizza ");
+            Console.WriteLine("        tast 9 for at fjerne en pizza fra menuen");
+            Console.WriteLine("         tast 10 for at redigere en pizza fra menuen");
             Console.WriteLine("\tTast 0 for afslut");
             Console.WriteLine("\t-----------------------------------");
             Console.Write("\tIndtast dit valg:");
-            return runmenu();
+            return menuchoice();
         }
 
-        public void menu()
+        public void runmenu()
         {
-            int valg = ShowMenu();
+            int valg = showMenu();
             while (valg != 0)
             {
                 switch (valg)
                 {
                     case 1:
                         Console.Clear();
-                        nykunde();
+                        nyKunde();
                         break;
                     case 2:
                         Console.Clear();
@@ -81,11 +84,11 @@ namespace Pizzaria
                         break;
                     case 5:
                         Console.Clear();
-                        Fjernkunde();
+                        fjernKunde();
                         break;
                     case 6:
                         Console.Clear();
-                        addpizza();
+                        tilføjPizza();
                         break;
                     case 7:
                         Console.Clear();
@@ -102,16 +105,17 @@ namespace Pizzaria
                         break;
                     case 10:
                         Console.Clear();
+                        redigerPizza();
                         break;
                 }
                 Console.ReadLine();
                 Console.Clear();
-                valg = ShowMenu();
+                valg = showMenu();
             }
         }
 
 
-        public void nykunde()
+        public void nyKunde()
         {
             Console.WriteLine("indtast venligst et navn");
             string name = Console.ReadLine();
@@ -121,7 +125,7 @@ namespace Pizzaria
             _customerCatalog.nyKunde(name, kunde1);
         }
 
-        public void Fjernkunde()
+        public void fjernKunde()
         {
             Console.WriteLine("indtast navnet på den kunde du vil fjerne");
             string name = Console.ReadLine();
@@ -133,11 +137,20 @@ namespace Pizzaria
             Console.WriteLine("opdater kunden");
             Console.WriteLine("angiv navn på kunden");
             string oldname = Console.ReadLine();
-            Console.WriteLine("indtast det nye navn");
-            string name = Console.ReadLine();
-            Console.WriteLine("indtast den nye adresse");
-            string adresse = Console.ReadLine();
-            _customerCatalog.Redigerkunde(oldname, name, adresse);
+            if (_customerCatalog.Kundedicte.ContainsKey(oldname))
+            {
+                Console.WriteLine("indtast det nye navn");
+                string name = Console.ReadLine();
+                Console.WriteLine("indtast den nye adresse");
+                string adresse = Console.ReadLine();
+                _customerCatalog.redigerKunde(oldname,name, adresse);
+            }
+            else
+            {
+                Console.WriteLine("kunden du søger efter eksistere ikke i systemet");
+                Console.ReadLine();
+            }
+            ;
         }
 
         public void søgKunde()
@@ -147,15 +160,30 @@ namespace Pizzaria
             _customerCatalog.søgNavn(name);
         }
 
-        public void addpizza()
+        public double prisConvertion()
+        {
+            string choice = Console.ReadLine();
+            double input = -1;
+            if (double.TryParse(choice, out input))
+            {
+                return input;
+            }
+            else
+            {
+                Console.WriteLine("du skal indtaste et beløb der må ikke være nogle bogstaver");
+                return -1;
+            }
+        }
+
+public void tilføjPizza()
         {
             Console.WriteLine("please enter a name");
             string name = Console.ReadLine();
             Console.WriteLine("please enter the toppings");
             string topping = Console.ReadLine();
             Console.WriteLine("please enter the price");
-            double Pris = double.Parse(Console.ReadLine());
-            _pizzacatalog.addpizza(name,topping,Pris);
+            double Pris = prisConvertion();
+            _pizzacatalog.tilføjPizza(name,topping,Pris);
         }
 
         public void redigerPizza()
@@ -168,8 +196,8 @@ namespace Pizzaria
             Console.WriteLine("indtast de nye toppings");
             string toppings = Console.ReadLine();
             Console.WriteLine("indtast den nye pris");
-            int pris = Int32.Parse(Console.ReadLine());
-            _pizzacatalog.Redigerpizza(oldname, name, toppings, pris);
+            double pris = prisConvertion();
+            _pizzacatalog.redigerPizza(oldname, name, toppings, pris);
         }
 
         public void søgPizza()

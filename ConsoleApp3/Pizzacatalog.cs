@@ -24,7 +24,12 @@ namespace Pizzaria
             get { return _pizzaliste; }
         }
 
-        public void addpizza(string name,string toppings,double Pris )
+        public Pizza pizza
+        {
+            get { return _pizza; }
+        }
+
+        public void tilføjPizza(string name,string toppings,double Pris )
         {
 
             _pizzaliste.Add(new Pizza(name, toppings, Pris));
@@ -43,19 +48,14 @@ namespace Pizzaria
                 _pizzaliste.Remove(item);
         }
 
-        public void Redigerpizza(string oldname,string name, string toppings,double pris)
+        public void redigerPizza(string oldname,string name, string toppings,double pris)
         {
 
-            int i = 0;
-            foreach (var item in _pizzaliste)
-            {
-                if (oldname == item.pizzanavn)
-                {
-                    break;
-                }
-                i++;
-            }
-            _pizzaliste[i] = new Pizza(name, toppings, pris);
+            int pizzaIndex = _pizzaliste.IndexOf(søgPizza(oldname));
+            if (pizzaIndex == -1)
+                Console.WriteLine("pizza exsister ikke");
+            else 
+                _pizzaliste[pizzaIndex] = new Pizza(name, toppings, pris);
 
 
         }
@@ -63,11 +63,11 @@ namespace Pizzaria
         public Pizza søgPizza(string name)
         {
 
-            foreach (Pizza item in _pizzaliste)
+            foreach (Pizza pizza in _pizzaliste)
             {
-                if (name == _pizza.pizzanavn)
+                if (name == pizza.pizzanavn)
                 {
-                    return item;
+                    return pizza;
                 }
             }
             Console.WriteLine("den pizza du søger efter eksistere ikke");

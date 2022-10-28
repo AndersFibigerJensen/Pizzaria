@@ -5,10 +5,8 @@ using Pizzaria;
 
 Pizzacatalog pizzacatalog=new Pizzacatalog();
 CustomerCatalog customerCatalog=new CustomerCatalog();
-Store mystore=new Store(pizzacatalog, customerCatalog);
-
-
-mystore.menu();
+Menu mystore=new Menu(pizzacatalog, customerCatalog);
+mystore.runmenu();
 
 
 

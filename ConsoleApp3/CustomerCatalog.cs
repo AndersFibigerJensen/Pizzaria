@@ -17,6 +17,12 @@ namespace Pizzaria
             _kundedicte = new Dictionary<string, Kunde>();
         }
 
+        public Dictionary<string,Kunde> Kundedicte
+        {
+            get { return _kundedicte; }
+        }
+            
+
         public void nyKunde(string name,Kunde kunde1)
         {
             _kundedicte.Add(name,kunde1);
@@ -24,12 +30,19 @@ namespace Pizzaria
 
         public void fjernKunde( string name)
         {
-            _kundedicte.Remove(name);
+            if (_kundedicte.ContainsKey(name))
+            {
+                _kundedicte.Remove(name);
+                Console.WriteLine($"kunden {name} er fjernet fra systemet");
+            }
+            else
+                Console.WriteLine("ikke fundet");
+            
         }
 
-        public void Redigerkunde(string oldname,string name,string adresse)
+        public void redigerKunde(string oldname, string name,string adresse)
         {
-            _kundedicte[oldname] = new Kunde(name, adresse);
+           _kundedicte[oldname] = new Kunde(name, adresse);
         }
 
         public void søgNavn(string name)
@@ -37,7 +50,7 @@ namespace Pizzaria
             if(_kundedicte.ContainsKey(name))
                 Console.WriteLine(_kundedicte[name].ToString());
             else
-                Console.WriteLine("not found");
+                Console.WriteLine("ikke fundet");
         }
 
         public void Printkunde()
